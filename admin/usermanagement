@@ -1,0 +1,149 @@
+import unittest
+import time
+from selenium import webdriver 
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+
+class UserManagement(unittest.TestCase): 
+
+    def setUp(self): 
+        self.browser = webdriver.Chrome(ChromeDriverManager().install())
+
+
+    def test_a_success_adduser(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_admin_viewAdminModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_admin_UserManagement").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"btnAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"systemUser_employeeName_empName").send_keys("Do Oanh")
+        time.sleep(1)
+        browser.find_element(By.ID,"systemUser_userName").send_keys("Doanh1")
+        time.sleep(1)
+        browser.find_element(By.ID,"systemUser_password").send_keys("Testing123")
+        time.sleep(1)
+        browser.find_element(By.ID,"systemUser_confirmPassword").send_keys("Testing123")
+        time.sleep(1)
+        browser.find_element(By.ID,"btnSave").click() 
+        time.sleep(1)
+
+        response_data = browser.find_element(By.ID,"successBodyEdit").text
+
+        self.assertIn('Saved', response_data)
+        
+    def test_b_failed_adduser_username_lessthan5char(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_admin_viewAdminModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_admin_UserManagement").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"btnAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"systemUser_employeeName_empName").send_keys("Varma Rajeshh")
+        time.sleep(1)
+        browser.find_element(By.ID,"systemUser_userName").send_keys("aaa")
+        time.sleep(1)
+
+
+        response_data = browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div/div[2]/form/fieldset/ol/li[3]/span").text
+
+        self.assertIn('Should have at least 5 characters', response_data)
+
+    def test_c_failed_adduser_employeenotexist(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_admin_viewAdminModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_admin_UserManagement").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"btnAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"systemUser_employeeName_empName").send_keys("aaa")
+        time.sleep(1)
+    
+
+        response_data = browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div/div[2]/form/fieldset/ol/li[2]/span").text
+
+        self.assertIn('Employee does not exist', response_data)
+
+    def test_d_failed_adduser_passwordnotmatch(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_admin_viewAdminModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_admin_UserManagement").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"btnAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div/div[2]/form/fieldset/ol/li[6]/input").send_keys("testing123")
+        time.sleep(1)
+        browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div/div[2]/form/fieldset/ol/li[7]/input[1]").send_keys("testing1234")
+        time.sleep(1)
+        
+        response_data = browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div/div[2]/form/fieldset/ol/li[7]/span").text
+
+        self.assertIn('Password do not match', response_data)
+
+    def test_e_failed_searchuser_notexisted(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_admin_viewAdminModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_admin_UserManagement").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"searchSystemUser_userName").send_keys("hhh") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"searchBtn").click() 
+        time.sleep(1)
+    
+        response_data = browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[2]/div/div/form/div[4]/table/tbody/tr/td").text
+
+        self.assertIn('No Records Found', response_data)
+
+        
+if __name__ == "__main__": 
+    unittest.main()
