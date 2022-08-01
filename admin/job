@@ -1,0 +1,68 @@
+import unittest
+import time
+from selenium import webdriver 
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+
+class TestRegister(unittest.TestCase): 
+
+    def setUp(self): 
+        self.browser = webdriver.Chrome(ChromeDriverManager().install())
+        
+    def test_a_success_addjob(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_admin_viewAdminModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_admin_Job").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"btnAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"jobTitle_jobTitle").send_keys("Tester")
+        time.sleep(1)
+        browser.find_element(By.ID,"btnSave").click() 
+        time.sleep(1)
+
+        # validasi
+        response_data = browser.find_element(By.ID,"successBodyEdit").text
+        
+
+        self.assertIn('Successfully Saved', response_data)
+
+    def test_b_failed_addjob(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_admin_viewAdminModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_admin_Job").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"btnAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"jobTitle_jobTitle").send_keys("halo")
+        time.sleep(1)
+       
+
+        # validasi
+        response_data = browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div/div[2]/form/fieldset/ol/li[1]/span").text
+        
+
+        self.assertIn('Already exist', response_data)
+
+if __name__ == "__main__": 
+    unittest.main()
