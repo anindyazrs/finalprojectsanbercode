@@ -1,0 +1,109 @@
+import unittest
+import time
+from selenium import webdriver 
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+
+class TestRegister(unittest.TestCase): 
+    def setUp(self): 
+        self.browser = webdriver.Chrome(ChromeDriverManager().install())
+        
+    def test_a_success_create_customfield(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_pim_viewPimModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_pim_listCustomFields").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"buttonAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"customField_name").send_keys("Astry")
+        time.sleep(1)
+        browser.find_element(By.ID,"customField_screen").click() 
+        time.sleep(1)
+        browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[1]/div[2]/form/fieldset/ol/li[2]/select/option[4]").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"customField_type").click() 
+        time.sleep(1)
+        browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[1]/div[2]/form/fieldset/ol/li[3]/select/option[3]").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"btnSave").click() 
+        time.sleep(1)
+
+        # validasi
+        response_data = browser.find_element(By.ID,"successBodyEdit").text
+        
+
+        self.assertIn('Successfully Saved', response_data)
+
+    def test_b_failed_create_customfield(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_pim_viewPimModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_pim_listCustomFields").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"buttonAdd").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"customField_name").send_keys("")
+        time.sleep(1)
+        browser.find_element(By.ID,"btnSave").click() 
+        time.sleep(1)
+
+        # validasi
+        response_data = browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[1]/div[2]/form/fieldset/ol/li[1]/span").text
+        
+
+        self.assertIn('Required', response_data)
+
+    def test_c_success_delete_customfield(self): 
+        # steps
+        browser = self.browser #buka web browser
+        browser.get("https://opensource-demo.orangehrmlive.com/") # buka situs
+        time.sleep(3)
+        browser.find_element(By.ID,"txtUsername").send_keys("Admin") # isi nama
+        time.sleep(1)
+        browser.find_element(By.ID,"txtPassword").send_keys("admin123") # isi email
+        time.sleep(1)
+        browser.find_element(By.ID,"btnLogin").click() # klik button sign up
+        time.sleep(2)
+        browser.find_element(By.ID,"menu_pim_viewPimModule").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"menu_pim_listCustomFields").click() 
+        time.sleep(1)
+        browser.find_element(By.XPATH,"/html/body/div[1]/div[3]/div[2]/div[2]/form/table/tbody/tr[1]/td[1]/input").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"buttonRemove").click() 
+        time.sleep(1)
+        browser.find_element(By.ID,"dialogDeleteBtn").send_keys("")
+        time.sleep(1)
+        browser.find_element(By.ID,"btnSave").click() 
+        time.sleep(1)
+
+        # validasi
+        response_data = browser.find_element(By.ID,"successBodyDelete").text
+        
+
+        self.assertIn('Required', response_data)
+
+
+
+
+if __name__ == "__main__": 
+    unittest.main()
